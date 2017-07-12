@@ -11,3 +11,7 @@ exports.spotifyKeys = {
 	id: '2a7d8524667f45c992a554ba75d0ecd2',
 	secret: '409319f5a39e44fc8e3836445fc89305',
 }
+
+exports.imdbKeys = {
+	key: '40e9cece',
+}
