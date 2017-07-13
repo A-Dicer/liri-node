@@ -42,7 +42,7 @@ function spotifyThisSong(song){
 	console.log("Spotify Search: " + song);
 	console.log("-------------------");
 	
-	spotify.search({ type: 'track', query: song}, function(err, data) {
+	spotify.search({ type: 'track', query: song, limit: 5}, function(err, data) {
   		if (err) {
     		return console.log('Error occurred: ' + err);
   		}
@@ -50,7 +50,9 @@ function spotifyThisSong(song){
 	 	for (var i = 0; i < info.length; i++){
 		 	console.log("-----------");
 			console.log(info[i].name);
-			console.log(info[i].artists[0].name)
+			console.log(info[i].artists[0].name);
+			console.log(info[i].preview_url);
+			console.log(info[i].album.name);
 		}
 		console.log("-----------------------------------------------");
 		console.log("");
