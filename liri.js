@@ -181,7 +181,8 @@ function inquire(){
 			  			movieThis(info);
 			  		} else { movieThis("Tron")}
 		  		})
-		  	}	
+		  	}
+		  	else if(response.option1 === "Do What It Says"){ doWhatItSays()}	
 		 });
 }
 
