@@ -208,7 +208,7 @@ function inquire(){
 	    },
 	])
 	.then(function(response) {
-		//runs nextQuestion functin and passes in information based on what was chosen
+		//runs nextQuestion function and passes in information based on what was chosen
 	  	if(response.option1 === "My Tweets"){ 
 	  		nextQuestion("Enter Twitter User Name: ", myTweets, "AndrewDicer");
 	  	} else if(response.option1 === "Spotify This Song") { 
