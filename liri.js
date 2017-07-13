@@ -30,7 +30,6 @@ function myTweets(name){
 	    	console.log(text);
 	    	console.log("-------------------");
 		}
-		console.log("");
 		console.log("-----------------------------------------------");
 		console.log("");
 		restart();
@@ -60,7 +59,6 @@ function spotifyThisSong(song){
 			console.log(info[i].name);
 			console.log(info[i].artists[0].name)
 		}
-		console.log("");
 		console.log("-----------------------------------------------");
 		console.log("");
 		restart();
@@ -68,12 +66,12 @@ function spotifyThisSong(song){
 }
 
 //------------------------------- imdb ---------------------------------------------
-function movieThis(){
+function movieThis(movie){
 	console.log("");
-	console.log("IMDB");
+	console.log("IMDB Search: " + movie);
 	console.log("-------------------");
 	
-	var queryUrl = "http://www.omdbapi.com/?t=Tron&y=&plot=short&apikey=" + keys.imdbKeys.key;
+	var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=" + keys.imdbKeys.key;
 
 	request(queryUrl, function(error, response, body) {
 	  	if (!error && response.statusCode === 200) {
@@ -86,6 +84,9 @@ function movieThis(){
 	   		console.log("Plot: " + JSON.parse(body).Plot);
 	   		console.log("Actors: " + JSON.parse(body).Actors);
 	  	}
+		console.log("-----------------------------------------------");
+		console.log("");
+		restart();
 	});
 }
 
@@ -148,7 +149,7 @@ function inquire(){
 		  		})
 		  	}
 
-		  	if(response.option1 === "Spotify This Song"){
+		  	else if(response.option1 === "Spotify This Song"){
 		  	  inquirer
 		  		.prompt([
 		  			{
@@ -162,6 +163,23 @@ function inquire(){
 		  			if(info !=""){
 			  			spotifyThisSong(info);
 			  		} else { spotifyThisSong("The Sign")}
+		  		})
+		  	}
+
+		  	else if(response.option1 === "Movie This"){
+		  	  inquirer
+		  		.prompt([
+		  			{
+				        type: "input",
+				    	message: "Enter A Movie Title: ",
+				   	    name: "movie"
+		  			},
+		  		])
+		  		.then(function(response) {
+		  			var info = response.movie.trim()
+		  			if(info !=""){
+			  			movieThis(info);
+			  		} else { movieThis("Tron")}
 		  		})
 		  	}	
 		 });
