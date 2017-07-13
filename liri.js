@@ -20,7 +20,7 @@ function myTweets(name){
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 	  if (!error) {
 	  	console.log("");
-	  	console.log("Twitter");
+	  	console.log("Twitter Search: " + name);
 	  	console.log("-------------------");
 
 	  	for (var i = 0; i < tweets.length && i < 20; i++){
@@ -31,6 +31,9 @@ function myTweets(name){
 	    	console.log("-------------------");
 		}
 		console.log("");
+		console.log("-----------------------------------------------");
+		console.log("");
+		restart();
 	  }
 	  else {console.log(error)};
 	});
@@ -42,9 +45,11 @@ function spotifyThisSong(song){
 	  id: keys.spotifyKeys.id,
 	  secret: keys.spotifyKeys.secret,
 	});
+	
 	console.log("");
-	console.log("Spotify");
+	console.log("Spotify Search: " + song);
 	console.log("-------------------");
+	
 	spotify.search({ type: 'track', query: song}, function(err, data) {
   		if (err) {
     		return console.log('Error occurred: ' + err);
@@ -54,7 +59,11 @@ function spotifyThisSong(song){
 		 	console.log("-----------");
 			console.log(info[i].name);
 			console.log(info[i].artists[0].name)
-		} 
+		}
+		console.log("");
+		console.log("-----------------------------------------------");
+		console.log("");
+		restart();
 	});
 }
 
@@ -94,28 +103,68 @@ function doWhatItSays(){
 }
 
 //------------------------------- inquirer -----------------------------------------
-inquirer
-  .prompt([
-    {
-      type: "list",
-      message: "What would you like to do?",
-      choices: ["My Tweets", "Spotify This Song", "Movie This", "Do What It Says"],
-      name: "option1"
-    },
-  ])
-  .then(function(response) {
-  	if(response.option1 === "My Tweets"){
-  	  inquirer
-  		.prompt([
-  			{
-		      type: "input",
-		      message: "Enter Twitter User Name: ",
-		      name: "userName"
-  			},
-  		])
-  		.then(function(response2) {
-  			if(response2 !="")
-	  		myTweets(response2.userName);
-  		})
-  	}	
-  });
+function restart(){
+	inquirer
+	  	.prompt([
+		    {
+			    type: "confirm",
+			    message: "Would you like to start over?",
+			    name: "confirm",
+			    default: true
+		    }
+		])
+		.then(function(response) {
+		    if (response.confirm) { inquire()}
+		    else { console.log("See you next time!")}
+	  	});
+}
+
+function inquire(){
+	inquirer
+	  	.prompt([
+		    {
+		      	type: "list",
+		      	message: "What would you like to do?",
+		      	choices: ["My Tweets", "Spotify This Song", "Movie This", "Do What It Says"],
+		      	name: "option1"
+		    },
+		 ])
+		 .then(function(response) {
+
+		  	if(response.option1 === "My Tweets"){
+		  	  inquirer
+		  		.prompt([
+		  			{
+				        type: "input",
+				    	message: "Enter Twitter User Name: ",
+				   	    name: "userName"
+		  			},
+		  		])
+		  		.then(function(response) {
+		  			var info = response.userName.trim()
+		  			if(info !=""){
+			  			myTweets(info);
+			  		} else { myTweets("AndrewDicer")}
+		  		})
+		  	}
+
+		  	if(response.option1 === "Spotify This Song"){
+		  	  inquirer
+		  		.prompt([
+		  			{
+				        type: "input",
+				    	message: "Enter A Song Title: ",
+				   	    name: "song"
+		  			},
+		  		])
+		  		.then(function(response) {
+		  			var info = response.song.trim()
+		  			if(info !=""){
+			  			spotifyThisSong(info);
+			  		} else { spotifyThisSong("The Sign")}
+		  		})
+		  	}	
+		 });
+}
+
+inquire();
