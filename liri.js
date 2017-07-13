@@ -198,7 +198,7 @@ function searched(){
 //------------------------------- inquirer -----------------------------------------
 //function for inquirer 
 function inquire(){
-	//askes the first question
+	//ask the first question
 	inquirer.prompt([
 	    {
 	      	type: "list",
