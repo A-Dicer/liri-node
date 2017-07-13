@@ -9,12 +9,7 @@ var inquirer = require("inquirer");
 
 //------------------------------- Twitter -----------------------------------------
 function myTweets(name){
-	var client = new Twitter({
-	  consumer_key: keys.twitterKeys.consumer_key,
-	  consumer_secret: keys.twitterKeys.consumer_secret,
-	  access_token_key: keys.twitterKeys.access_token_key,
-	  access_token_secret: keys.twitterKeys.access_token_secret,
-	});
+	var client = new Twitter(keys.twitterKeys);
 	 
 	var params = {screen_name: name};
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
@@ -40,10 +35,7 @@ function myTweets(name){
 
 //------------------------------- Spotify -----------------------------------------
 function spotifyThisSong(song){
-	var spotify = new Spotify({
-	  id: keys.spotifyKeys.id,
-	  secret: keys.spotifyKeys.secret,
-	});
+	var spotify = new Spotify(keys.spotifyKeys);
 	
 	console.log("");
 	console.log("Spotify Search: " + song);
@@ -162,7 +154,10 @@ function inquire(){
 		  			var info = response.song.trim()
 		  			if(info !=""){
 			  			spotifyThisSong(info);
-			  		} else { spotifyThisSong("The Sign")}
+			  		} else { 
+			  			var song = "track:'The Sign' artist:'Ace of Base'";
+			  			spotifyThisSong(song)
+			  		}
 		  		})
 		  	}
 
