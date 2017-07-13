@@ -4,10 +4,11 @@ var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 var request = require('request');
 var fs = require("fs");
+var inquirer = require("inquirer");
 
 
 //------------------------------- Twitter -----------------------------------------
-function myTweets(){
+function myTweets(name){
 	var client = new Twitter({
 	  consumer_key: keys.twitterKeys.consumer_key,
 	  consumer_secret: keys.twitterKeys.consumer_secret,
@@ -15,7 +16,7 @@ function myTweets(){
 	  access_token_secret: keys.twitterKeys.access_token_secret,
 	});
 	 
-	var params = {screen_name: 'AndrewDicer'};
+	var params = {screen_name: name};
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 	  if (!error) {
 	  	console.log("");
@@ -34,6 +35,7 @@ function myTweets(){
 	  else {console.log(error)};
 	});
 }
+
 //------------------------------- Spotify -----------------------------------------
 function spotifyThisSong(song){
 	var spotify = new Spotify({
@@ -55,6 +57,7 @@ function spotifyThisSong(song){
 		} 
 	});
 }
+
 //------------------------------- imdb ---------------------------------------------
 function movieThis(){
 	console.log("");
@@ -78,15 +81,41 @@ function movieThis(){
 }
 
 //------------------------------- fs -----------------------------------------------
+function doWhatItSays(){
+	fs.readFile("random.txt", "utf8", function(error, data) {
+		if (error) {
+	    return console.log(error);
+	  }
+	  console.log(data);
+	  var dataArr = data.split(",");
+	  var song = dataArr[1];
+	  spotifyThisSong(song);
+	});
+}
 
-fs.readFile("random.txt", "utf8", function(error, data) {
-	if (error) {
-    return console.log(error);
-  }
-  console.log(data);
-  var dataArr = data.split(",");
-  var song = dataArr[1];
-
-  spotifyThisSong(song);
-});
-
+//------------------------------- inquirer -----------------------------------------
+inquirer
+  .prompt([
+    {
+      type: "list",
+      message: "What would you like to do?",
+      choices: ["My Tweets", "Spotify This Song", "Movie This", "Do What It Says"],
+      name: "option1"
+    },
+  ])
+  .then(function(response) {
+  	if(response.option1 === "My Tweets"){
+  	  inquirer
+  		.prompt([
+  			{
+		      type: "input",
+		      message: "Enter Twitter User Name: ",
+		      name: "userName"
+  			},
+  		])
+  		.then(function(response2) {
+  			if(response2 !="")
+	  		myTweets(response2.userName);
+  		})
+  	}	
+  });
