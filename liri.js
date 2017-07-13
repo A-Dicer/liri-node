@@ -27,6 +27,7 @@ function myTweets(name){
 		}
 		console.log("-----------------------------------------------");
 		console.log("");
+		append(", The Twitter Account " + name + " was searched.")
 		restart();
 	  }
 	  else {console.log(error)};
@@ -53,6 +54,7 @@ function spotifyThisSong(song){
 		}
 		console.log("-----------------------------------------------");
 		console.log("");
+		append(", The Song " + song + " was searched.")
 		restart();
 	});
 }
@@ -78,6 +80,7 @@ function movieThis(movie){
 	  	}
 		console.log("-----------------------------------------------");
 		console.log("");
+		append(", The Movie " + movie + " was searched.")
 		restart();
 	});
 }
@@ -88,14 +91,22 @@ function doWhatItSays(){
 		if (error) {
 	    return console.log(error);
 	  }
-	  console.log(data);
 	  var dataArr = data.split(",");
 	  var song = dataArr[1];
 	  spotifyThisSong(song);
 	});
 }
 
-//------------------------------- inquirer -----------------------------------------
+//------------------------------- append --------------------------------------------
+function append(info){
+	fs.appendFile("log.txt", info, function(err) {
+	    if (err) {
+	    	return console.log(err);
+	    }
+	 });
+}
+
+//------------------------------- restart -------------------------------------------
 function restart(){
 	inquirer
 	  	.prompt([
@@ -112,13 +123,14 @@ function restart(){
 	  	});
 }
 
+//------------------------------- inquirer -----------------------------------------
 function inquire(){
 	inquirer
 	  	.prompt([
 		    {
 		      	type: "list",
 		      	message: "What would you like to do?",
-		      	choices: ["My Tweets", "Spotify This Song", "Movie This", "Do What It Says"],
+		      	choices: ["My Tweets", "Spotify This Song", "Movie This", "Do What It Says", "What Has Been Searched"],
 		      	name: "option1"
 		    },
 		 ])
@@ -134,7 +146,7 @@ function inquire(){
 		  			},
 		  		])
 		  		.then(function(response) {
-		  			var info = response.userName.trim()
+		  			var info = response.userName.trim();
 		  			if(info !=""){
 			  			myTweets(info);
 			  		} else { myTweets("AndrewDicer")}
@@ -151,12 +163,12 @@ function inquire(){
 		  			},
 		  		])
 		  		.then(function(response) {
-		  			var info = response.song.trim()
+		  			var info = response.song.trim();
 		  			if(info !=""){
 			  			spotifyThisSong(info);
 			  		} else { 
 			  			var song = "track:'The Sign' artist:'Ace of Base'";
-			  			spotifyThisSong(song)
+			  			spotifyThisSong(song);
 			  		}
 		  		})
 		  	}
@@ -171,13 +183,29 @@ function inquire(){
 		  			},
 		  		])
 		  		.then(function(response) {
-		  			var info = response.movie.trim()
+		  			var info = response.movie.trim();
 		  			if(info !=""){
 			  			movieThis(info);
 			  		} else { movieThis("Tron")}
 		  		})
 		  	}
-		  	else if(response.option1 === "Do What It Says"){ doWhatItSays()}	
+
+		  	else if(response.option1 === "Do What It Says"){ doWhatItSays()}
+
+		  	else if(response.option1 === "What Has Been Searched"){
+		  	  	fs.readFile("log.txt", "utf8", function(error, data) {
+					if (error) {
+		    			return console.log(error);
+		  			} else {
+					 
+					 	var dataArr = data.split(",");
+					 	for(var i = 1; i < dataArr.length; i++){
+					 		console.log(i + ": " +dataArr[i]);
+					 	}
+					restart();
+		  			}
+				})	  
+		  	}	
 		 });
 }
 
